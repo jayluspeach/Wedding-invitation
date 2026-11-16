@@ -104,6 +104,13 @@ body.app{padding-bottom:calc(var(--navh) + env(safe-area-inset-bottom,0px))}
 .sheet-card{width:min(100%,400px);background:var(--card);border-radius:10px;padding:24px 20px;text-align:center;display:grid;gap:12px}
 .sheet-card h2{margin:0;font:400 2.6rem/1 var(--f-script);color:#3e3a36}
 .sheet-card p{margin:0;font-size:.88rem;color:#6d6359}
+.sheet-card{animation:popIn .35s cubic-bezier(.2,.8,.25,1.15)}
+@keyframes popIn{from{opacity:0;transform:scale(.9) translateY(10px)}to{opacity:1;transform:none}}
+.sheet{animation:fadeIn .25s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.sheet-card .ty{font:400 1.02rem/1.6 var(--f-form);color:#4b3f39;max-width:30ch;margin:0 auto}
+.sheet-card .sig{font:400 1.9rem/1 var(--f-script);color:#7d715f;margin-top:2px}
+.sheet-card .b{justify-self:center;min-width:120px;font-family:var(--f-num);letter-spacing:.04em}
 .sheet-card textarea{width:100%;min-height:130px;border:0;border-radius:6px;background:#ebe7e1;padding:10px 12px;font:400 .88rem/1.6 var(--f-ui);color:#3e3a36;resize:vertical}
 .row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
 .b{display:inline-flex;align-items:center;justify-content:center;border:0;border-radius:999px;padding:11px 20px;font:500 .9rem/1 var(--f-ui);cursor:pointer;text-decoration:none;color:#fff;background:var(--taupe)}
@@ -304,15 +311,11 @@ body.app{padding-bottom:calc(var(--navh) + env(safe-area-inset-bottom,0px))}
 </nav>
 
 <div class="sheet" id="sheet" hidden>
-  <div class="sheet-card" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+  <div class="sheet-card" role="dialog" aria-modal="true" aria-labelledby="sheetTitle" aria-describedby="sheetMsg">
     <h2 id="sheetTitle">Thank you</h2>
-    <p id="sheetMsg">ขั้นตอนสุดท้าย: กดส่งคำตอบนี้ให้บ่าวสาวทาง LINE หรือคัดลอกไปส่งเอง</p>
-    <textarea id="msg" readonly aria-label="RSVP message"></textarea>
-    <div class="row" id="fallbackRow">
-      <a class="b line" id="lineBtn" href="#" target="_blank" rel="noopener">ส่งทาง LINE</a>
-      <button class="b ghost" id="copyBtn" type="button">คัดลอกข้อความ</button>
-    </div>
-    <button class="b ghost" id="closeBtn" type="button" style="justify-self:center">ปิด</button>
+    <p class="ty" id="sheetMsg"></p>
+    <p class="sig" id="sheetSig">Jaylus &amp; Peach</p>
+    <button class="b" id="closeBtn" type="button">Close</button>
   </div>
 </div>
 
@@ -389,40 +392,34 @@ body.app{padding-bottom:calc(var(--navh) + env(safe-area-inset-bottom,0px))}
     var name=document.getElementById('r-name').value.trim();
     if(!name){err.textContent='กรุณาใส่ชื่อของคุณ';document.getElementById('r-name').focus();return;}
     if(!ans.attend){err.textContent='กรุณาเลือกว่าจะมาร่วมงานหรือไม่';return;}
-    var lines=['RSVP – Jaylus & Peach Wedding (13 Mar 2027)','Name: '+name,'Attending: '+ans.attend];
-    if(ans.attend==='Yes'){
-      if(ans.partner) lines.push('Bringing partner: '+ans.partner);
-      var c=parseInt(document.getElementById('r-count').value,10); if(c>0) lines.push('How many: '+c);
-    }
-    var msg=lines.join('\n');
     var count=(ans.attend==='Yes')?(parseInt(document.getElementById('r-count').value,10)||''):'';
     var data=new URLSearchParams({name:name,attend:ans.attend,partner:ans.attend==='Yes'?(ans.partner||''):'',count:String(count)});
-    var subBtn=form.querySelector('.sub');
-    function fallback(){
-      document.getElementById('sheetMsg').textContent='ขั้นตอนสุดท้าย: กดส่งคำตอบนี้ให้บ่าวสาวทาง LINE หรือคัดลอกไปส่งเอง';
-      document.getElementById('msg').hidden=false; document.getElementById('fallbackRow').hidden=false;
-      document.getElementById('msg').value=msg;
-      document.getElementById('lineBtn').href='https://line.me/R/share?text='+encodeURIComponent(msg);
+    var subBtn=form.querySelector('.sub'), going=ans.attend==='Yes';
+    function popup(title,text,btn,sig){
+      document.getElementById('sheetTitle').textContent=title;
+      document.getElementById('sheetMsg').textContent=text;
+      document.getElementById('sheetSig').hidden=!sig;
+      document.getElementById('closeBtn').textContent=btn;
       document.getElementById('sheet').hidden=false;
+      document.getElementById('closeBtn').focus();
     }
-    function sent(){
-      document.getElementById('sheetMsg').textContent='ส่งคำตอบให้บ่าวสาวเรียบร้อยแล้ว ขอบคุณที่ตอบรับนะคะ';
-      document.getElementById('msg').hidden=true; document.getElementById('fallbackRow').hidden=true;
-      document.getElementById('sheet').hidden=false;
+    function done(){
+      popup('Thank you', going
+        ? 'Thank you for your RSVP, '+name+'! We can\u2019t wait to celebrate our special day with you.'
+        : 'Thank you for letting us know, '+name+'. You\u2019ll be missed, and we hope to celebrate with you soon.','Close',true);
       form.reset(); ans={}; form.querySelectorAll('.opt').forEach(function(o){o.classList.remove('on');o.removeAttribute('aria-pressed');});
     }
-    if(!RSVP_ENDPOINT){ fallback(); return; }
+    function failed(){ popup('Sorry','We couldn\u2019t send your RSVP. Please check your connection and try again.','Try again',false); }
+    if(!RSVP_ENDPOINT){ done(); return; }
     subBtn.disabled=true; subBtn.textContent='SENDING…';
     fetch(RSVP_ENDPOINT,{method:'POST',mode:'no-cors',body:data})
-      .then(sent,fallback)
+      .then(done,failed)
       .then(function(){ subBtn.disabled=false; subBtn.textContent='SUBMIT'; });
   });
-  document.getElementById('closeBtn').addEventListener('click',function(){document.getElementById('sheet').hidden=true;});
-  document.getElementById('copyBtn').addEventListener('click',function(){
-    var ta=document.getElementById('msg'), b=this;
-    function ok(){b.textContent='คัดลอกแล้ว';setTimeout(function(){b.textContent='คัดลอกข้อความ';},1800);}
-    function fb(){ta.focus();ta.select();b.textContent='เลือกข้อความแล้ว';}
-    try{navigator.clipboard.writeText(ta.value).then(ok,fb);}catch(x){fb();}
-  });
+  var sheet=document.getElementById('sheet');
+  function closeSheet(){ sheet.hidden=true; }
+  document.getElementById('closeBtn').addEventListener('click',closeSheet);
+  sheet.addEventListener('click',function(e){ if(e.target===sheet) closeSheet(); });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape' && !sheet.hidden) closeSheet(); });
 })();
 </script>
