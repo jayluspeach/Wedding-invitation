@@ -7,7 +7,7 @@
 /* Layout: the original Canva design rebuilt from its own layers on a 400px-wide stage, scaled to the screen width exactly as the Canva site does (phone and desktop). Each layer replays the Canva entrance timing. Single fixed look. */
 :root{
   --z:1;
-  --navh:62px;
+  --navh:82px;
   --cover:#d5cbc4;
   --ink:#333333;
   --muted:#5f5f5f;
@@ -53,23 +53,22 @@ body.app.navon{padding-bottom:calc(var(--navh) + env(safe-area-inset-bottom,0px)
 
 /* app tab bar: phone-sized, hidden on Home until the reader reaches the end, then stays */
 .tabbar{position:fixed;left:50%;bottom:0;z-index:40;width:min(100%,480px);transform:translateX(-50%);
-  background:rgba(250,248,245,.96);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
-  border:1px solid rgba(75,63,57,.12);border-bottom:0;border-radius:20px 20px 0 0;box-shadow:0 -8px 28px rgba(60,45,35,.12);
-  padding:6px max(6px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(6px,env(safe-area-inset-left,0px));
+  background:#ffffff;border-radius:24px 24px 0 0;box-shadow:0 -6px 30px rgba(45,35,28,.14);
+  padding:10px max(8px,env(safe-area-inset-right,0px)) calc(10px + env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-left,0px));
   transition:transform .45s cubic-bezier(.2,.7,.2,1),opacity .3s ease}
 .tabbar.away{transform:translateX(-50%) translateY(115%);opacity:0;pointer-events:none}
 .tabbar ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr))}
-.tab{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:50px;padding:2px 0;text-decoration:none;color:#9b9087;font:600 11px/1 var(--f-num);letter-spacing:.01em;
+.tab{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-height:60px;text-decoration:none;color:#3f3833;font:700 12px/1 var(--f-num);letter-spacing:.01em;
   -webkit-tap-highlight-color:transparent;transition:color .2s ease}
-.tab .ic{display:grid;place-items:center;width:48px;height:28px;border-radius:999px;transition:background .25s ease,transform .15s ease}
-.tab svg{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
-.tab:active .ic{transform:scale(.9)}
-.tab[aria-current="page"]{color:#4b3f39}
-.tab[aria-current="page"] .ic{background:rgba(125,113,95,.16)}
-.tab[aria-current="page"] svg{stroke-width:2}
+.tab .ic{display:grid;place-items:center;width:44px;height:32px;transition:transform .15s ease}
+.tab svg{width:28px;height:28px;fill:currentColor}
+.tab:active .ic{transform:scale(.88)}
+.tab[aria-current="page"]{color:#9a7838}
+.tab[aria-current="page"] .ic{animation:tabPop .35s ease}
+@keyframes tabPop{0%{transform:scale(.8)}60%{transform:scale(1.12)}100%{transform:scale(1)}}
 @media (max-width:600px){
-  :root{--navh:76px}
-  .tabbar{width:100%;border-radius:0;border-left:0;border-right:0;padding:7px max(4px,env(safe-area-inset-right,0px)) calc(7px + env(safe-area-inset-bottom,0px)) max(4px,env(safe-area-inset-left,0px))}
+  .tabbar{width:100%}
+}
   .tab{min-height:62px;gap:5px;font-size:12.5px}
   .tab .ic{width:60px;height:34px}
   .tab svg{width:27px;height:27px}
@@ -310,11 +309,11 @@ body.app.navon{padding-bottom:calc(var(--navh) + env(safe-area-inset-bottom,0px)
 
 <nav class="tabbar" id="tabbar" aria-label="Invitation sections" hidden>
   <ul>
-    <li><a class="tab" href="#home" data-v="home"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 10.5 12 4l8.5 6.5"/><path d="M5.5 9v10.5h4.5v-5.5h4v5.5h4.5V9"/></svg></span><span>Home</span></a></li>
-    <li><a class="tab" href="#schedule" data-v="schedule"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 9.5h17M8 3v4M16 3v4M8 13.5h3M8 17h6"/></svg></span><span>Schedule</span></a></li>
-    <li><a class="tab" href="#gallery" data-v="gallery"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="2.5"/><circle cx="9" cy="9.5" r="1.8"/><path d="m4 17 5-4.5 3.5 3 3-2.5 4.5 4"/></svg></span><span>Gallery</span></a></li>
-    <li><a class="tab" href="#location" data-v="location"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.4 7-11.5a7 7 0 0 0-14 0C5 14.6 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.6"/></svg></span><span>Location</span></a></li>
-    <li><a class="tab" href="#rsvp" data-v="rsvp"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5.5" width="17" height="13" rx="2"/><path d="m4 7 8 6 8-6"/></svg></span><span>RSVP</span></a></li>
+    <li><a class="tab" href="#home" data-v="home"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11.3 3.3a1 1 0 0 1 1.4 0l8.2 7.6c.6.6.2 1.6-.6 1.6H19v7.3c0 .7-.5 1.2-1.2 1.2h-3.6v-5.4a1 1 0 0 0-1-1h-2.4a1 1 0 0 0-1 1V21H6.2C5.5 21 5 20.5 5 19.8v-7.3H3.7c-.8 0-1.2-1-.6-1.6z"/></svg></span><span>Home</span></a></li>
+    <li><a class="tab" href="#schedule" data-v="schedule"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M7 2.5a1 1 0 0 1 1 1V5h8V3.5a1 1 0 1 1 2 0V5h.5A2.5 2.5 0 0 1 21 7.5v11a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 18.5v-11A2.5 2.5 0 0 1 5.5 5H6V3.5a1 1 0 0 1 1-1zM5 10v8.5c0 .3.2.5.5.5h13c.3 0 .5-.2.5-.5V10zm2.5 2.5h3v3h-3z"/></svg></span><span>Schedule</span></a></li>
+    <li><a class="tab" href="#gallery" data-v="gallery"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M5.5 3.5h13A2.5 2.5 0 0 1 21 6v12a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 18V6a2.5 2.5 0 0 1 2.5-2.5zM9 7a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-4 10.6V18c0 .3.2.5.5.5h13c.3 0 .5-.2.5-.5v-2.2l-3.6-3.4a1 1 0 0 0-1.4 0l-3.3 3.1-1.6-1.4a1 1 0 0 0-1.3 0z"/></svg></span><span>Gallery</span></a></li>
+    <li><a class="tab" href="#location" data-v="location"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12 2a7.5 7.5 0 0 1 7.5 7.5c0 5.4-6.4 11.4-6.8 11.8a1 1 0 0 1-1.4 0C10.9 20.9 4.5 14.9 4.5 9.5A7.5 7.5 0 0 1 12 2zm0 4.6a2.9 2.9 0 1 0 0 5.8 2.9 2.9 0 0 0 0-5.8z"/></svg></span><span>Location</span></a></li>
+    <li><a class="tab" href="#rsvp" data-v="rsvp"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 4.5h15A2.5 2.5 0 0 1 22 7v.4l-10 6.2L2 7.4V7a2.5 2.5 0 0 1 2.5-2.5z"/><path d="M2 9.7V17a2.5 2.5 0 0 0 2.5 2.5h15A2.5 2.5 0 0 0 22 17V9.7l-9.5 5.9a1 1 0 0 1-1 0z"/></svg></span><span>RSVP</span></a></li>
   </ul>
 </nav>
 
@@ -347,7 +346,7 @@ body.app.navon{padding-bottom:calc(var(--navh) + env(safe-area-inset-bottom,0px)
     body.classList.remove('locked'); window.scrollTo(0,0);
     page.classList.add('show'); page.removeAttribute('aria-hidden');
     setTimeout(function(){cover.hidden=true;},300);
-    body.classList.add('app'); tabbar.classList.add('away'); tabbar.hidden=false;
+    body.classList.add('app'); tabbar.hidden=false; reveal();
     window.addEventListener('scroll',check,{passive:true}); window.addEventListener('resize',check);
     window.addEventListener('scroll',atEnd,{passive:true});
     try{ history.replaceState(null,'','#home'); }catch(x){}
