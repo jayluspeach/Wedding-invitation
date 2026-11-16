@@ -52,8 +52,9 @@ img{display:block;max-width:none}
 body.app.navon{padding-bottom:calc(var(--navh) + env(safe-area-inset-bottom,0px))}
 
 /* app tab bar: phone-sized, hidden on Home until the reader reaches the end, then stays */
-.tabbar{position:fixed;left:50%;bottom:0;z-index:40;width:min(100%,480px);transform:translateX(-50%);
-  background:#ffffff;border-radius:24px 24px 0 0;box-shadow:0 -6px 30px rgba(45,35,28,.14);
+.tabbar{position:fixed;left:50%;bottom:0;z-index:40;width:min(100%,1080px);transform:translateX(-50%);
+  background:linear-gradient(180deg,rgba(255,255,255,.55),rgba(255,255,255,.28));-webkit-backdrop-filter:blur(18px) saturate(170%);backdrop-filter:blur(18px) saturate(170%);
+  border:1px solid rgba(255,255,255,.6);border-bottom:0;border-radius:24px 24px 0 0;box-shadow:0 -8px 32px rgba(45,35,28,.16),inset 0 1px 0 rgba(255,255,255,.75);
   padding:10px max(8px,env(safe-area-inset-right,0px)) calc(10px + env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-left,0px));
   transition:transform .45s cubic-bezier(.2,.7,.2,1),opacity .3s ease}
 .tabbar.away{transform:translateX(-50%) translateY(115%);opacity:0;pointer-events:none}
@@ -63,7 +64,8 @@ body.app.navon{padding-bottom:calc(var(--navh) + env(safe-area-inset-bottom,0px)
 .tab .ic{display:grid;place-items:center;width:44px;height:32px;transition:transform .15s ease}
 .tab svg{width:28px;height:28px;fill:currentColor}
 .tab:active .ic{transform:scale(.88)}
-.tab[aria-current="page"]{color:#9a7838}
+.tab[aria-current="page"]{color:#8a6a2c}
+.tab span:last-child{text-shadow:0 1px 1px rgba(255,255,255,.6)}
 .tab[aria-current="page"] .ic{animation:tabPop .35s ease}
 @keyframes tabPop{0%{transform:scale(.8)}60%{transform:scale(1.12)}100%{transform:scale(1)}}
 @media (max-width:600px){
@@ -309,7 +311,7 @@ body.app.navon{padding-bottom:calc(var(--navh) + env(safe-area-inset-bottom,0px)
 
 <nav class="tabbar" id="tabbar" aria-label="Invitation sections" hidden>
   <ul>
-    <li><a class="tab" href="#home" data-v="home"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11.3 3.3a1 1 0 0 1 1.4 0l8.2 7.6c.6.6.2 1.6-.6 1.6H19v7.3c0 .7-.5 1.2-1.2 1.2h-3.6v-5.4a1 1 0 0 0-1-1h-2.4a1 1 0 0 0-1 1V21H6.2C5.5 21 5 20.5 5 19.8v-7.3H3.7c-.8 0-1.2-1-.6-1.6z"/></svg></span><span>Home</span></a></li>
+    <li><a class="tab" href="#home" data-v="home"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.6c-.3 0-.6-.1-.8-.3C7.4 17.1 3 13.6 3 9.2 3 6.3 5.2 4 8 4c1.6 0 3 .8 4 2 1-1.2 2.4-2 4-2 2.8 0 5 2.3 5 5.2 0 4.4-4.4 7.9-8.2 11.1-.2.2-.5.3-.8.3z"/></svg></span><span>Home</span></a></li>
     <li><a class="tab" href="#schedule" data-v="schedule"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M7 2.5a1 1 0 0 1 1 1V5h8V3.5a1 1 0 1 1 2 0V5h.5A2.5 2.5 0 0 1 21 7.5v11a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 18.5v-11A2.5 2.5 0 0 1 5.5 5H6V3.5a1 1 0 0 1 1-1zM5 10v8.5c0 .3.2.5.5.5h13c.3 0 .5-.2.5-.5V10zm2.5 2.5h3v3h-3z"/></svg></span><span>Schedule</span></a></li>
     <li><a class="tab" href="#gallery" data-v="gallery"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M5.5 3.5h13A2.5 2.5 0 0 1 21 6v12a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 18V6a2.5 2.5 0 0 1 2.5-2.5zM9 7a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-4 10.6V18c0 .3.2.5.5.5h13c.3 0 .5-.2.5-.5v-2.2l-3.6-3.4a1 1 0 0 0-1.4 0l-3.3 3.1-1.6-1.4a1 1 0 0 0-1.3 0z"/></svg></span><span>Gallery</span></a></li>
     <li><a class="tab" href="#location" data-v="location"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12 2a7.5 7.5 0 0 1 7.5 7.5c0 5.4-6.4 11.4-6.8 11.8a1 1 0 0 1-1.4 0C10.9 20.9 4.5 14.9 4.5 9.5A7.5 7.5 0 0 1 12 2zm0 4.6a2.9 2.9 0 1 0 0 5.8 2.9 2.9 0 0 0 0-5.8z"/></svg></span><span>Location</span></a></li>
@@ -354,7 +356,7 @@ body.app.navon{padding-bottom:calc(var(--navh) + env(safe-area-inset-bottom,0px)
   });
 
   /* app views: each tab shows one slice of the card */
-  var VIEWS={home:[0,3413,'#ffffff','#ffffff'],schedule:[1259,1497,'rgb(236,238,238)','#ffffff'],
+  var VIEWS={home:[0,3413,'#ffffff','rgb(119,110,88)'],schedule:[1259,1497,'rgb(236,238,238)','#ffffff'],
     gallery:[1979,2805,'rgb(123,114,94)','#ffffff'],location:[1497,1979,'rgb(250,249,248)','rgb(235,237,236)'],
     rsvp:[2805,3413,'#ffffff','rgb(119,110,88)']};
   var view=document.getElementById('view'), tabbar=document.getElementById('tabbar');
@@ -376,7 +378,7 @@ body.app.navon{padding-bottom:calc(var(--navh) + env(safe-area-inset-bottom,0px)
     var c=VIEWS[v]; cur=v;
     if(v!=='home') reveal();
     view.style.setProperty('--vt',c[0]); view.style.setProperty('--vh',c[1]-c[0]);
-    view.style.setProperty('--fill', v==='rsvp'?c[2]:c[3]);
+    view.style.setProperty('--fill', v==='rsvp'?c[2]:c[3]); body.style.background=c[3];
     view.style.setProperty('--va', v==='rsvp'?'flex-end':'flex-start');
     tabbar.querySelectorAll('.tab').forEach(function(a){ if(a.dataset.v===v) a.setAttribute('aria-current','page'); else a.removeAttribute('aria-current'); });
     window.scrollTo(0,0);
