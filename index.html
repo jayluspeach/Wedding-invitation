@@ -341,7 +341,8 @@ body.app{padding-bottom:calc(var(--navh) + env(safe-area-inset-bottom,0px))}
     setTimeout(function(){cover.hidden=true;},300);
     body.classList.add('app'); tabbar.hidden=false;
     window.addEventListener('scroll',check,{passive:true}); window.addEventListener('resize',check);
-    show(VIEWS[location.hash.slice(1)]?location.hash.slice(1):'home',true);
+    try{ history.replaceState(null,'','#home'); }catch(x){}
+    show('home',true);
   });
 
   /* app views: each tab shows one slice of the card */
