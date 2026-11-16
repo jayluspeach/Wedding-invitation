@@ -322,7 +322,7 @@ body.app{padding-bottom:calc(var(--navh) + env(safe-area-inset-bottom,0px))}
 <script>
 (function(){
   /* Google Apps Script web app URL: saves each RSVP to the Google Sheet and emails jayluspeach@gmail.com */
-  var RSVP_ENDPOINT='';
+  var RSVP_ENDPOINT='https://script.google.com/macros/s/AKfycbxi_cvn53SzupJSor3Kfv177B7_4_1iW41GcVgImzeSbGUmMn33yfxkI-tDNcEcmxjXiw/exec';
   var root=document.documentElement, body=document.body;
   function fit(){ var w=root.clientWidth||window.innerWidth, z=w/400, h=Math.max(645,window.innerHeight/z);
     root.style.setProperty('--z', z.toFixed(4)); root.style.setProperty('--ch', h.toFixed(1)+'px'); root.style.setProperty('--off', (h-820).toFixed(1)+'px'); }
