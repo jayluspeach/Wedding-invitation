@@ -95,6 +95,7 @@ body.app{padding-bottom:calc(var(--navh) + env(safe-area-inset-bottom,0px))}
 .rsvp .opt{display:flex;align-items:center;height:18px;background:var(--bar);border:0;border-radius:3px;padding:0 6px;font:400 7.5px/1 var(--f-form);color:#333;cursor:pointer;text-align:left}
 .rsvp .opt.on{background:#d3cdc4;box-shadow:inset 0 0 0 1px var(--taupe)}
 .rsvp .sub{height:20px;border:0;border-radius:4px;background:var(--taupe);color:#2b2620;font:700 8px/1 var(--f-form);letter-spacing:.06em;cursor:pointer}
+.rsvp .sub[disabled]{opacity:.6;cursor:progress}
 .rsvp .err{font:500 7px/1.2 var(--f-ui);color:#8a3b2b;text-align:center}
 
 /* RSVP hand-off sheet */
@@ -305,9 +306,9 @@ body.app{padding-bottom:calc(var(--navh) + env(safe-area-inset-bottom,0px))}
 <div class="sheet" id="sheet" hidden>
   <div class="sheet-card" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
     <h2 id="sheetTitle">Thank you</h2>
-    <p>ขั้นตอนสุดท้าย: กดส่งคำตอบนี้ให้บ่าวสาวทาง LINE หรือคัดลอกไปส่งเอง</p>
+    <p id="sheetMsg">ขั้นตอนสุดท้าย: กดส่งคำตอบนี้ให้บ่าวสาวทาง LINE หรือคัดลอกไปส่งเอง</p>
     <textarea id="msg" readonly aria-label="RSVP message"></textarea>
-    <div class="row">
+    <div class="row" id="fallbackRow">
       <a class="b line" id="lineBtn" href="#" target="_blank" rel="noopener">ส่งทาง LINE</a>
       <button class="b ghost" id="copyBtn" type="button">คัดลอกข้อความ</button>
     </div>
@@ -317,6 +318,8 @@ body.app{padding-bottom:calc(var(--navh) + env(safe-area-inset-bottom,0px))}
 
 <script>
 (function(){
+  /* Google Apps Script web app URL: saves each RSVP to the Google Sheet and emails jayluspeach@gmail.com */
+  var RSVP_ENDPOINT='';
   var root=document.documentElement, body=document.body;
   function fit(){ var w=root.clientWidth||window.innerWidth, z=w/400, h=Math.max(645,window.innerHeight/z);
     root.style.setProperty('--z', z.toFixed(4)); root.style.setProperty('--ch', h.toFixed(1)+'px'); root.style.setProperty('--off', (h-820).toFixed(1)+'px'); }
@@ -392,9 +395,27 @@ body.app{padding-bottom:calc(var(--navh) + env(safe-area-inset-bottom,0px))}
       var c=parseInt(document.getElementById('r-count').value,10); if(c>0) lines.push('How many: '+c);
     }
     var msg=lines.join('\n');
-    document.getElementById('msg').value=msg;
-    document.getElementById('lineBtn').href='https://line.me/R/share?text='+encodeURIComponent(msg);
-    document.getElementById('sheet').hidden=false;
+    var count=(ans.attend==='Yes')?(parseInt(document.getElementById('r-count').value,10)||''):'';
+    var data=new URLSearchParams({name:name,attend:ans.attend,partner:ans.attend==='Yes'?(ans.partner||''):'',count:String(count)});
+    var subBtn=form.querySelector('.sub');
+    function fallback(){
+      document.getElementById('sheetMsg').textContent='ขั้นตอนสุดท้าย: กดส่งคำตอบนี้ให้บ่าวสาวทาง LINE หรือคัดลอกไปส่งเอง';
+      document.getElementById('msg').hidden=false; document.getElementById('fallbackRow').hidden=false;
+      document.getElementById('msg').value=msg;
+      document.getElementById('lineBtn').href='https://line.me/R/share?text='+encodeURIComponent(msg);
+      document.getElementById('sheet').hidden=false;
+    }
+    function sent(){
+      document.getElementById('sheetMsg').textContent='ส่งคำตอบให้บ่าวสาวเรียบร้อยแล้ว ขอบคุณที่ตอบรับนะคะ';
+      document.getElementById('msg').hidden=true; document.getElementById('fallbackRow').hidden=true;
+      document.getElementById('sheet').hidden=false;
+      form.reset(); ans={}; form.querySelectorAll('.opt').forEach(function(o){o.classList.remove('on');o.removeAttribute('aria-pressed');});
+    }
+    if(!RSVP_ENDPOINT){ fallback(); return; }
+    subBtn.disabled=true; subBtn.textContent='SENDING…';
+    fetch(RSVP_ENDPOINT,{method:'POST',mode:'no-cors',body:data})
+      .then(sent,fallback)
+      .then(function(){ subBtn.disabled=false; subBtn.textContent='SUBMIT'; });
   });
   document.getElementById('closeBtn').addEventListener('click',function(){document.getElementById('sheet').hidden=true;});
   document.getElementById('copyBtn').addEventListener('click',function(){
