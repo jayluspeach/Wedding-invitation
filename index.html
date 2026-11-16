@@ -341,7 +341,7 @@ body.app{padding-bottom:calc(var(--navh) + env(safe-area-inset-bottom,0px))}
   /* app views: each tab shows one slice of the card */
   var VIEWS={home:[0,3413,'#ffffff','#ffffff'],schedule:[1259,1497,'rgb(236,238,238)','#ffffff'],
     gallery:[1979,2805,'rgb(123,114,94)','#ffffff'],location:[1497,1979,'rgb(250,249,248)','rgb(235,237,236)'],
-    rsvp:[2805,3186,'#ffffff','rgb(234,236,235)']};
+    rsvp:[2805,3413,'#ffffff','rgb(119,110,88)']};
   var view=document.getElementById('view'), tabbar=document.getElementById('tabbar');
   var gs=[].slice.call(document.querySelectorAll('#page .g')), cur=null;
   function check(){ var lim=window.innerHeight*0.88;
@@ -350,8 +350,8 @@ body.app{padding-bottom:calc(var(--navh) + env(safe-area-inset-bottom,0px))}
     if(!VIEWS[v]) v='home';
     var c=VIEWS[v]; cur=v;
     view.style.setProperty('--vt',c[0]); view.style.setProperty('--vh',c[1]-c[0]);
-    view.style.setProperty('--fill',c[3]);
-    view.style.setProperty('--va','flex-start');
+    view.style.setProperty('--fill', v==='rsvp'?c[2]:c[3]);
+    view.style.setProperty('--va', v==='rsvp'?'flex-end':'flex-start');
     tabbar.querySelectorAll('.tab').forEach(function(a){ if(a.dataset.v===v) a.setAttribute('aria-current','page'); else a.removeAttribute('aria-current'); });
     window.scrollTo(0,0);
     gs.forEach(function(g){ g.classList.remove('on'); });
