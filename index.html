@@ -59,7 +59,7 @@ img{display:block;max-width:none}
 .env-flapw{z-index:5}
 .env-flap{position:absolute;inset:0;transform-origin:50% 0;transform-style:preserve-3d;will-change:transform}
 .env-flap .face{-webkit-backface-visibility:hidden;backface-visibility:hidden}
-.env-flap .back{transform:rotateX(180deg)}
+.env-flap .back{transform:rotateY(180deg)}
 .env-names,.env-tap{z-index:6;pointer-events:none}
 .cv.on .env-tap{animation:tapPulse 2.4s 1.8s ease-in-out infinite}
 @keyframes tapPulse{0%,100%{opacity:1}50%{opacity:.55}}
@@ -556,16 +556,16 @@ body.app.navon{padding-bottom:calc(var(--navh) + env(safe-area-inset-bottom,0px)
     A(envf,[{transform:envf.style.transform||'none'},{transform:'none'}],{duration:400,easing:'ease'});
     var sx=seal.offsetLeft+seal.offsetWidth/2, sy=seal.offsetTop+seal.offsetHeight/2;
     return wait(380).then(function(){
-      sparkle(envf,sx,sy,18,62);
-      A(seal,[{transform:'scale(1) rotate(0)',opacity:1,filter:'drop-shadow(0 0 0 rgba(255,220,140,0))'},
-              {transform:'scale(.88) rotate(0)',opacity:1,filter:'drop-shadow(0 0 14px rgba(255,214,120,1))',offset:.22},
-              {transform:'translate(30px,-70px) scale(1.25) rotate(160deg)',opacity:0,filter:'drop-shadow(0 0 6px rgba(255,214,120,.6))'}],
-        {duration:720,easing:'cubic-bezier(.4,0,.2,1)'});
+      sparkle(envf,sx,sy,12,48);
+      A(seal,[{transform:'scale(1)',opacity:1,filter:'drop-shadow(0 0 0 rgba(255,220,140,0))'},
+              {transform:'scale(.92)',opacity:1,filter:'drop-shadow(0 0 14px rgba(255,214,120,1))',offset:.25},
+              {transform:'translateY(-34px) scale(1.12)',opacity:0,filter:'drop-shadow(0 0 6px rgba(255,214,120,.6))'}],
+        {duration:620,easing:'cubic-bezier(.4,0,.2,1)'});
       return wait(420);
     }).then(function(){
       /* 2. the flap swings open */
-      A(flap,[{transform:'rotateX(0deg)'},{transform:'rotateX(180deg)',offset:.86},{transform:'rotateX(172deg)'}],{duration:900,easing:'cubic-bezier(.5,0,.2,1)'});
-      setTimeout(function(){ flapW.style.zIndex='1'; },430);
+      A(flap,[{transform:'rotateX(0deg)'},{transform:'rotateX(180deg)'}],{duration:950,easing:'cubic-bezier(.65,0,.35,1)'});
+      setTimeout(function(){ flapW.style.zIndex='1'; },475);
       return wait(780);
     }).then(function(){
       /* 3. the card rises out of the envelope */
